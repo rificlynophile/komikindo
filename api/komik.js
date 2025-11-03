@@ -13,25 +13,40 @@ export default async function handler(req, res) {
   try {
     const { data } = await axios.get(`${BASE_URL}/komik/${slug}`, {
       headers: { "User-Agent": "Mozilla/5.0" },
+      timeout: 10000
     });
     const $ = cheerio.load(data);
 
+    // FIX: Better selectors
+    const title = $("h1.entry-title").text().trim() || 
+                  $(".komik-info h1").text().trim() ||
+                  $("h1").first().text().trim();
+    
+    const author = $(".komik-info .author").text().replace("Author:", "").trim() ||
+                   $(".info-content .author").text().trim();
+    
+    const genre = $(".komik-info .genre").text().replace("Genre:", "").trim() ||
+                  $(".genre-info").text().trim();
+
     const chapters = [];
-    $(".chapter-list li").each((_, el) => {
-      chapters.push({
-        title: $(el).text().trim(),
-        slug: $(el).find("a").attr("href").split("/").pop(),
-      });
+    $(".chapter-link, .lchx a, .eplister li a").each((_, el) => {
+      const href = $(el).attr("href");
+      if (href) {
+        chapters.push({
+          title: $(el).text().trim(),
+          slug: href.split("/").filter(Boolean).pop(),
+        });
+      }
     });
 
     res.status(200).json({
       status: true,
-      title: $(".judul-komik").text().trim(),
-      author: $(".author").text().trim(),
-      genre: $(".genre").text().trim(),
+      title,
+      author,
+      genre,
       chapters,
     });
   } catch (err) {
     res.status(500).json({ status: false, message: err.message });
   }
-}
+}}
