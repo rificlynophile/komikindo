@@ -11,19 +11,28 @@ export default async function handler(req, res) {
   if (!slug) return res.status(400).json({ status: false, message: "Missing slug" });
 
   try {
-    const { data } = await axios.get(`${BASE_URL}/chapter/${slug}`, {
+    const { data } = await axios.get(`${BASE_URL}/${slug}`, {
       headers: { "User-Agent": "Mozilla/5.0" },
+      timeout: 10000
     });
     const $ = cheerio.load(data);
 
+    // FIX: Better selectors for chapter images
+    const title = $("h1.entry-title").text().trim() || 
+                  $(".chapter-heading").text().trim() ||
+                  $("h1").first().text().trim();
+
     const pages = [];
-    $(".chapter-content img").each((_, el) => {
-      pages.push({ url: $(el).attr("src") });
+    $("#chimg img, .reader-area img, .chapter-content img").each((_, el) => {
+      const src = $(el).attr("src") || $(el).attr("data-src");
+      if (src) {
+        pages.push({ url: src });
+      }
     });
 
     res.status(200).json({
       status: true,
-      title: $(".chapter-title").text().trim(),
+      title,
       pages,
     });
   } catch (err) {
