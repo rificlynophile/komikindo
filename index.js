@@ -11,6 +11,8 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const BASE_URL = "https://komikindo2.com";
 
+app.use(express.static(path.join(__dirname, "public")));
+
 // Middleware: CORS & JSON header
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
