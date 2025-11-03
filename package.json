@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Simple Komikindo API for Vercel deployment",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "start": "node index.js"
   },
