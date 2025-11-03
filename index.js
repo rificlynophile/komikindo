@@ -11,8 +11,6 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const BASE_URL = "https://komikindo2.com";
 
-app.use(express.static(path.join(__dirname, "public")));
-
 // Middleware: CORS & JSON header
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -27,11 +25,6 @@ async function fetchHTML(url) {
   });
   return cheerio.load(data);
 }
-
-// Route utama (docs)
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "docs.html"));
-});
 
 // Route API utama
 app.get("/api", async (req, res) => {
@@ -56,6 +49,13 @@ app.get("/api", async (req, res) => {
   } catch (e) {
     res.status(500).json({ status: false, message: e.message });
   }
+});
+
+app.use(express.static(path.join(__dirname, "public")));
+
+// Route utama (docs)
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "docs.html"));
 });
 
 // Jalankan server lokal (Vercel auto handle)
