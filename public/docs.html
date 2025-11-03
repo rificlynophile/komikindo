@@ -14,14 +14,26 @@
 
     <h2>Endpoints</h2>
     <ul>
-      <li><code>?latest=1&page=1</code> - Komik terbaru</li>
-      <li><code>?komik=slug</code> - Detail komik</li>
-      <li><code>?chapter=slug-chapter</code> - Detail chapter</li>
-      <li><code>?genre=action&page=1</code> - Berdasarkan genre</li>
-      <li><code>?s=naruto&page=1</code> - Cari komik</li>
-      <li><code>?daftar=1</code> - Semua komik</li>
-      <li><code>?type=manga&page=1</code> - Berdasarkan tipe</li>
+      <li><code>/api/latest?page=1</code> - Komik terbaru</li>
+      <li><code>/api/komik?slug=one-piece</code> - Detail komik</li>
+      <li><code>/api/chapter?slug=one-piece-chapter-1</code> - Halaman chapter</li>
+      <li><code>/api/genre?genre=action&page=1</code> - Berdasarkan genre</li>
+      <li><code>/api/search?s=naruto&page=1</code> - Cari komik</li>
+      <li><code>/api/daftar?page=1</code> - Semua komik</li>
+      <li><code>/api/type?type=manga&page=1</code> - Berdasarkan tipe (manga/manhwa/manhua)</li>
     </ul>
+
+    <h2>Contoh Response</h2>
+    <pre><code>{
+  "status": true,
+  "data": [
+    {
+      "judul": "One Piece",
+      "gambar": "https://...",
+      "link": "https://komikindo2.com/komik/one-piece/"
+    }
+  ]
+}</code></pre>
 
     <footer>© 2025 rificlynophile</footer>
   </div>
