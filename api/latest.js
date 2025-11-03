@@ -11,16 +11,19 @@ export default async function handler(req, res) {
     const page = req.query.page || 1;
     const { data } = await axios.get(`${BASE_URL}/komik-terbaru/page/${page}`, {
       headers: { "User-Agent": "Mozilla/5.0" },
+      timeout: 10000  // FIX: Add timeout
     });
     const $ = cheerio.load(data);
     const result = [];
+    
     $(".animepost").each((_, el) => {
       result.push({
-        judul: $(el).find(".tt h4").text().trim(),
-        gambar: $(el).find("img").attr("src"),
+        judul: $(el).find(".tt h4").text().trim() || $(el).find("h4").text().trim(),
+        gambar: $(el).find("img").attr("src") || $(el).find("img").attr("data-src"),
         link: $(el).find("a").attr("href"),
       });
     });
+    
     res.status(200).json({ status: true, data: result });
   } catch (err) {
     res.status(500).json({ status: false, message: err.message });
